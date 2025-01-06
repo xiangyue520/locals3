@@ -2,6 +2,7 @@ package com.wanggan.locals3.inteceptor;
 
 import com.wanggan.locals3.config.SystemConfig;
 import com.wanggan.locals3.constant.S3Constant;
+import com.wanggan.locals3.model.AccessUser;
 import com.wanggan.locals3.util.ConvertOp;
 import com.wanggan.locals3.util.StringUtil;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class S3Interceptor implements HandlerInterceptor {
         boolean flag = false;
         String authorization = request.getHeader("Authorization");
         if (!StringUtil.isEmpty(authorization)) {
-            flag = validAuthorizationHead(request, systemConfig.getUsername(), systemConfig.getPassword());
+            flag = validAuthorizationHead(request);
         } else {
             //<your-access-key-id>/<date>/<aws-region>/<aws-service>/aws4_request
             //authorization = request.getParameter("X-Amz-Credential");
@@ -86,7 +87,7 @@ public class S3Interceptor implements HandlerInterceptor {
         return buckets.contains(bucketName);
     }
 
-    public boolean validAuthorizationHead(HttpServletRequest request, String accessKeyId, String secretAccessKey) throws Exception {
+    public boolean validAuthorizationHead(HttpServletRequest request) throws Exception {
         String authorization = request.getHeader("Authorization");
         String requestDate = request.getHeader("x-amz-date");
         String contentHash = request.getHeader("x-amz-content-sha256");
@@ -111,7 +112,8 @@ public class S3Interceptor implements HandlerInterceptor {
         String credential = parts[0].split("\\=")[1];
         String[] credentials = credential.split("\\/");
         String accessKey = credentials[0];
-        if (!accessKeyId.equals(accessKey)) {
+        AccessUser accessUser = matchUser(accessKey);
+        if (null == accessUser) {
             return false;
         }
         String date = credentials[1];
@@ -148,7 +150,7 @@ public class S3Interceptor implements HandlerInterceptor {
 
         ///region 重新生成签名
         //计算签名的key
-        byte[] kSecret = (SCHEME + secretAccessKey).getBytes();
+        byte[] kSecret = (SCHEME + accessUser.getAccessSecret()).getBytes();
         byte[] kDate = doHmacSHA256(kSecret, date);
         byte[] kRegion = doHmacSHA256(kDate, region);
         byte[] kService = doHmacSHA256(kRegion, service);
@@ -163,6 +165,14 @@ public class S3Interceptor implements HandlerInterceptor {
             return true;
         }
         return false;
+    }
+
+    private AccessUser matchUser(String accessKey) {
+        List<AccessUser> authList = systemConfig.getAuthList();
+        if (CollectionUtils.isEmpty(authList)) {
+            return null;
+        }
+        return authList.stream().filter(v -> v.getAccessKey().equals(accessKey)).findFirst().orElse(null);
     }
 
     public static String getCanonicalizedQueryString(Map<String, String> parameters) {

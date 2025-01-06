@@ -1,7 +1,6 @@
 package com.wanggan.locals3.util;
 
 import com.wanggan.locals3.config.SystemConfig;
-import com.wanggan.locals3.constant.S3Constant;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -66,7 +65,7 @@ public class S3Util {
     private S3Presigner getPresigner() {
         S3Presigner s3Presigner = S3Presigner.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(systemConfig.getUsername(), systemConfig.getPassword())))
-                .endpointOverride(URI.create(CommonUtil.getApiPath() + S3Constant.ENDPOINT + "/"))
+                .endpointOverride(URI.create(CommonUtil.getApiPath()))
                 .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).chunkedEncodingEnabled(false).build())
                 .region(Region.US_EAST_1)
                 .build();
