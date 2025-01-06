@@ -5,7 +5,7 @@ spring:
       max-file-size: 2048MB
       enabled: true
 server:
-  port: ${SERVER_PORT:9090}
+  port: ${SERVER_PORT:9000}
 system:
   console: ${SYSTEM_CONSOLE:true}
   tempPath: ${SYSTEM_TEMPPATH:/opt/locals3/tmp/}
