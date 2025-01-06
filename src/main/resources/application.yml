@@ -1,0 +1,15 @@
+spring:
+  servlet:
+    multipart:
+      max-request-size: 2048MB
+      max-file-size: 2048MB
+      enabled: true
+server:
+  port: ${SERVER_PORT:8001}
+system:
+  console: ${SYSTEM_CONSOLE:true}
+  tempPath: ${SYSTEM_TEMPPATH:/opt/locals3/tmp/}
+  dataPath: ${SYSTEM_DATAPATH:/opt/locals3/data/}
+  username: ${SYSTEM_USERNAME:admin}
+  password: ${SYSTEM_PASSWORD:abcd@1234}
+  externalBuckets: ${SYSTEM_EXTERNAL_BUCKETS:useasy-oss,external}
