@@ -2,12 +2,12 @@ locals3
 
 ## LocalS3 介绍
 
-**LocalS3** 是一个文件存储服务，无外部组件依赖，符合S3协议规范
+**LocalS3** 是一个基于S3协议的本地文件存储服务，无外部组件依赖
 
-1. 符合aws s3兼容协议接入
+1. 符合aws s3兼容协议接入,https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html
 2. 支持文件类型探测
 3. 本地文件目录存储数据
-4. 支持aws的认证规则
+4. 支持aws的v4认证规则
 5. 基于jdk8
 
 ### 参数信息
@@ -15,16 +15,16 @@ locals3
 | 参数名称	    | 备注                                                          |
 |----------|-------------------------------------------------------------|
 | console  | 	    是否打开控制调试接口，测试用，详情见ConsoleController                    |
-| tempPath | 	临时文件路径                                                     |
-| dataPath | 	文件存储目录                                                     |
-| username | 	凭据ID，对应accessId                                            |
-| password | 	密钥，对应accessSecret                                          |
+| tempPath | 	临时文件路径,默认为/opt/locals3/tmp/                                |
+| dataPath | 	文件存储目录,默认为/opt/locals3/data/                               |
+| username | 	凭据ID，对应accessId,默认为admin                                   |
+| password | 	密钥，对应accessSecret,默认为abcd@1234                                      |
 | externalBuckets| 允许外部访问的buckets列表,只有开启才可以外网访问,默认为useasy-oss,external,多个以逗号分隔 |
 
 ## 使用步骤
 1. 修改yaml文件的system.dataPath,调整上传的文件存储地址
 2. 修改yaml文件的username和password
-3. 启动服务,执行`java -jar locals3-[last-version].jar` 命令运行
+3. 启动服务,执行`java -jar locals3-[last-version].jar` 命令运行,默认运行端口9090
 4. 客户端使用aws的sdk进行接入即可
 
 ## 客户端接入
