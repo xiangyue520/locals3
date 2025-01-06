@@ -9,18 +9,20 @@ locals3
 3. 本地文件目录存储数据
 4. 支持aws的v4认证规则
 5. 基于jdk8
+6. 支持多apikey接入
 
 ### 参数信息
 
-| 参数名称	           | 备注                                                         |
-|-----------------|------------------------------------------------------------|
-| console         | 	是否打开控制调试接口，测试用，详情见ConsoleController                       |
-| tempPath        | 	临时文件路径,默认为/opt/locals3/tmp/                               |
-| dataPath        | 	文件存储目录,默认为/opt/locals3/data/                              |
-| username        | 	凭据ID，对应accessId,默认为admin                                  |
-| password        | 	密钥，对应accessSecret,默认为abcd@1234                            |
+| 参数名称	           | 备注                                                          |
+|-----------------|-------------------------------------------------------------|
+| console         | 	是否打开控制调试接口，测试用，详情见ConsoleController                        |
+| tempPath        | 	临时文件路径,默认为/opt/locals3/tmp/                                |
+| dataPath        | 	文件存储目录,默认为/opt/locals3/data/                               |
+| username        | 	凭据ID，对应accessId,默认为admin                                   |
+| password        | 	密钥，对应accessSecret,默认为abcd@1234                             |
 | externalBuckets | 允许外部访问的buckets列表,只有开启才可以外网访问,默认为useasy-oss,external,多个以逗号分隔 |
-| authList        | 账号授权访问列表,只有添加的才能进行认证,启用多个进行处理,配置见示例                        |
+| adminAuth        | 是否启用admin授权访问,true时会加入authList进行一起认证匹配,默认false              |
+| authList        | 账号授权访问列表,只有添加的才能进行认证,启用多个进行处理,配置见示例                         |
 
 ```yaml
 system:

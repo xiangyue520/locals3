@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @ConfigurationProperties(prefix = "system")
@@ -15,6 +16,7 @@ public class SystemConfig {
     private String username;
     private String password;
     private List<String> externalBuckets;
+    private Boolean adminAuth;
     private List<AccessUser> authList;
 
     public String getTempPath() {
@@ -61,8 +63,8 @@ public class SystemConfig {
         if (null == authList) {
             authList = new ArrayList<>(4);
         }
-        //如果admin已经在列表了,那么就不再添加了
-        if (!authList.contains(username)) {
+        //如果admin授权开启,且admin不在列表中,那么才进行添加
+        if (!authList.contains(username) && getAdminAuth()) {
             authList.add(AccessUser.of(username, password));
         }
         return authList;
@@ -70,5 +72,13 @@ public class SystemConfig {
 
     public void setAuthList(List<AccessUser> authList) {
         this.authList = authList;
+    }
+
+    public Boolean getAdminAuth() {
+        return Optional.ofNullable(adminAuth).orElse(Boolean.FALSE);
+    }
+
+    public void setAdminAuth(Boolean adminAuth) {
+        this.adminAuth = adminAuth;
     }
 }

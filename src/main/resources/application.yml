@@ -13,6 +13,4 @@ system:
   username: ${SYSTEM_USERNAME:admin}
   password: ${SYSTEM_PASSWORD:abcd@1234}
   externalBuckets: ${SYSTEM_EXTERNAL_BUCKETS:useasy-oss,external}
-  authList:
-  - accessKey: 123
-    accessSecret: 1234
+  adminAuth: ${SYSTEM_ADMIN_AUTH:false}
