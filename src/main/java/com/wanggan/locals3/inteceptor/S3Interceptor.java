@@ -5,6 +5,8 @@ import com.wanggan.locals3.constant.S3Constant;
 import com.wanggan.locals3.model.AccessUser;
 import com.wanggan.locals3.util.ConvertOp;
 import com.wanggan.locals3.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -38,6 +40,7 @@ import java.util.TreeMap;
 
 @Component
 public class S3Interceptor implements HandlerInterceptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(S3Interceptor.class);
     public static final String SCHEME = "AWS4";
     public static final String ALGORITHM = "HMAC-SHA256";
     public static final String UNSIGNED_PAYLOAD = "UNSIGNED-PAYLOAD";
@@ -67,7 +70,7 @@ public class S3Interceptor implements HandlerInterceptor {
             String bucketName = split[0];
             flag = allow(bucketName);
             if (!flag) {
-                System.out.println("not allow access,bucketName:" + bucketName + ",url:" + url);
+                LOGGER.warn("not allow access,bucketName:{},url:{}", bucketName, url);
             }
         }
         if (!flag) {
@@ -114,6 +117,7 @@ public class S3Interceptor implements HandlerInterceptor {
         String accessKey = credentials[0];
         AccessUser accessUser = matchUser(accessKey);
         if (null == accessUser) {
+            LOGGER.warn("validAuthorizationHead unknown accessKey:{},ip:{}", accessKey, request.getRemoteAddr());
             return false;
         }
         String date = credentials[1];
